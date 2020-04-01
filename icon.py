@@ -2,9 +2,10 @@ import os
 import re
 import urllib.request
 import json
-import requests #install requests
+import requests
 import itertools
-from PIL import Image #install Pillow
+from PIL import Image
+from progress.bar import IncrementalBar
 import shutil 
 
 def make_square(im, min_size=256, fill_color=(0, 0, 0, 0)):
@@ -14,17 +15,19 @@ def make_square(im, min_size=256, fill_color=(0, 0, 0, 0)):
     new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
     return new_im
 
-path=input("Enter the path (Replace \ with \\): ")
+path=input("Enter the path (Replace \ with \\\): ")
 list_folder=[f.name for f in os.scandir(path) if f.is_dir()]
 list_folder_scr=list()
 new_movies=list()
 print(list_folder)
+print('\n')
 for i in list_folder:
     i=re.sub(r' \(.*?\)',r'',i) 
     i=re.sub(r' \[.*?\]',r'',i)
     i=i.replace(' ','+')
     list_folder_scr.append(i)
 
+bar=IncrementalBar('Searching',max=len(list_folder))
 for (query,i) in zip(list_folder_scr,list_folder):
     if not os.path.exists(path+'\\'+i+'\\'+i+'.jpg'):
         new_movies.append(i)
@@ -40,6 +43,8 @@ for (query,i) in zip(list_folder_scr,list_folder):
         img=Image.open(path+'\\'+i+'\\'+i+'.jpg')
         new_img=make_square(img)
         new_img.save(path+'\\'+i+'\\'+i+'_icon'+'.ico')
+    bar.next()
+bar.finish()
 
 if not os.path.exists(path+"\\batch.bat"):
     shutil.copyfile("batch.bat",path+"\\batch.bat")
