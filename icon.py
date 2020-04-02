@@ -2,10 +2,10 @@ import os
 import re
 import urllib.request
 import json
-import requests
+import requests #install requests 
 import itertools
-from PIL import Image
-from progress.bar import IncrementalBar
+from PIL import Image #install Pillow
+from progress.bar import IncrementalBar #install progress
 import shutil 
 
 def make_square(im, min_size=256, fill_color=(0, 0, 0, 0)):
